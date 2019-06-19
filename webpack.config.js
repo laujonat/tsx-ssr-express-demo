@@ -83,6 +83,11 @@ const commonModules = [
     loader: "json-loader"
   },
   {
+    test: /\.(js|jsx)$/,
+    exclude: /node_modules/,
+    loader: 'babel-loader'
+  },
+  {
     test: /\.s(a|c)ss$/,
     exclude: /\.module.(s(a|c)ss)$/,
     loader: `style!css`
@@ -191,26 +196,28 @@ const clientConfig = {
     runtimeChunk: "single",
     splitChunks: {
       chunks: "all",
-      maxInitialRequests: Infinity,
-      minSize: 0,
+      minSize: 30000,
+      maxSize: 0,
+      minChunks: 1,
+      maxAsyncRequests: 5,
+      maxInitialRequests: 3,
+      automaticNameDelimiter: "~",
+      name: true,
       cacheGroups: {
-        vendor: {
-          test: /[\\/]node_modules[\\/]/,
-          name(module) {
-            // get the name. E.g. node_modules/packageName/not/this/part.js
-            // or node_modules/packageName
-            const packageName = module.context.match(
-              /[\\/]node_modules[\\/](.*?)([\\/]|$)/
-            )[1];
-            // npm package names are URL-safe, but some servers don't like @ symbols
-            return `npm.${packageName.replace("@", "")}`;
-          },
-          enforce: true,
-          reuseExistingChunk: true
+        commons: {
+          test: /[\\/]node_modules[\\/]/, 
+          name: "vendor",
+          chunks: "initial",
         }
       }
     }
-  }
+  },
+  externals: [
+    nodeExternals({
+      react: "React",
+      "react-dom": "ReactDom"
+    })
+  ],
 };
 
 module.exports = [serverConfig, clientConfig];
