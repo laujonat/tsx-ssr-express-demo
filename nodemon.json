@@ -1,0 +1,25 @@
+{
+  "delay": "2000",
+  "restartable": "rs",
+  "ignore": [
+    ".git",
+    "node_modules/**/node_modules"
+  ],
+  "verbose": true,
+  "execMap": {
+    "js": "node --harmony"
+  },
+  "events": {
+    "restart": "osascript -e 'display notification \"App restarted due to:\n'$FILENAME'\" with title \"nodemon\"'"
+  },
+  "watch": [ 
+    "build/", 
+    "server/",
+    "client/"
+  ],
+  "env": {
+    "NODE_ENV": "development"
+  },
+  "exec": "ts-node ./server/index.ts",
+  "ext": "js, ts, tsx, json"
+}
