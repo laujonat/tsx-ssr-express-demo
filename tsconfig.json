@@ -23,15 +23,10 @@
       "node_modules"
     ],
     "paths": {
-        "@client/*": [
-            "client/*"
-        ],
-        "@server/*": [
-            "server/*"
-        ],
-        "*": [
-            "node_modules/*"
-        ]
+        "@client/components/*": [ "./client/components/*" ],
+        "@client/*": [ "client/*" ],
+        "@server/*": [ "server/*" ],
+        "*": [ "node_modules/*" ]
     },
     "types": [
         "express",
