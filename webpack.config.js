@@ -16,7 +16,7 @@ const minify = require("html-minifier").minify;
 // Define custom loading logic without suffering the performance penalty that script-based resource loaders incur.
 const PreloadWebpackPlugin = require("preload-webpack-plugin");
 // Generate static HTML file on build
-// const HtmlWebpackPlugin = require("html-webpack-plugin");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
 
 const env = process.env.NODE_ENV;
 const config = {
@@ -131,7 +131,7 @@ const serverConfig = {
   },
   devtool: "inline-source-map" /* Extract ts source maps from tsconfig. */,
   entry: {
-    index: path.resolve(__dirname, "server/index.ts")
+    index: path.resolve(__dirname, "src/server/index.ts")
   },
   output: {
     path: path.resolve(process.cwd(), "build/js"),
@@ -176,7 +176,7 @@ const clientConfig = {
     errorDetails: true
   },
   entry: {
-    index: path.resolve(__dirname, "client/index.tsx")
+    index: path.resolve(__dirname, "src/index.tsx")
   },
   output: {
     path: path.resolve(process.cwd(), "build"),

@@ -18,14 +18,14 @@
         "removeComments": true, /* Do not emit comments to output. */
         "baseUrl": "./" /* All module imports with non-relative names are assumed to be relative to the baseUrl.*/
     },
-    "include": [ "client/**/*", "server/**/* "], 
+    "include": [ "src/**/*", "server/**/* "], 
     "exclude": [ 
       "node_modules"
     ],
     "paths": {
-        "@client/components/*": [ "./client/components/*" ],
-        "@client/*": [ "client/*" ],
-        "@server/*": [ "server/*" ],
+        "@src/components/*": [ "./src/components/*" ],
+        "@src/*": [ "src/*" ],
+        "@server/*": [ "src/server/*" ],
         "*": [ "node_modules/*" ]
     },
     "types": [
@@ -38,6 +38,6 @@
     ],
     "typeRoots": [
         "./node_modules/@types",
-        "./client/types"
+        "./src/types"
     ]
 }
