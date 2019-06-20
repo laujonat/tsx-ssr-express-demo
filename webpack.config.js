@@ -4,18 +4,17 @@ const nodeExternals = require("webpack-node-externals");
 const BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
 
 // Code minification
-const TerserPlugin = require("terser-webpack-plugin");
+// const TerserPlugin = require("terser-webpack-plugin");
 // Webpack plugin that runs TypeScript type checker on a separate process.
 const ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin");
 // Load modules contained in "paths" in tsconfig.json
 const TsconfigPathsPlugin = require("tsconfig-paths-webpack-plugin");
 // https://github.com/Roilan/react-server-boilerplate/blob/master/webpack.config.js
 const isProduction = process.env.NODE_ENV === "production";
-const minify = require("html-minifier").minify;
 // Define custom loading logic without suffering the performance penalty that script-based resource loaders incur. 
-const PreloadWebpackPlugin = require('preload-webpack-plugin');
+// const PreloadWebpackPlugin = require('preload-webpack-plugin');
 // Generate static HTML file on build
-const HtmlWebpackPlugin = require("html-webpack-plugin");
+// const HtmlWebpackPlugin = require("html-webpack-plugin");
 
 const env = process.env.NODE_ENV;
 const config = {
@@ -30,26 +29,7 @@ const commonPlugins = [
   }),
   new webpack.HotModuleReplacementPlugin(),
   new webpack.NoEmitOnErrorsPlugin(),
-  new ForkTsCheckerWebpackPlugin(),
-  new webpack.HashedModuleIdsPlugin(),
-  new HtmlWebpackPlugin({
-    hash: true,
-    meta: {
-      viewport: "width=device-width, initial-scale=1.0",
-      "Content-Security-Policy": {
-        "http-equiv": "Content-Security-Policy",
-        content: ""
-      },
-      template: "./server.html.ts",
-      minify: {
-        collapseWhitespace: true,
-        collapseWhitespace: true,
-        removeComments: true,
-        removeStyleLinkTypeAttributes: true,
-        useShortDoctype: true
-      }
-    }
-  })
+  new ForkTsCheckerWebpackPlugin()
 ];
 
 const tsPaths = [
@@ -86,6 +66,10 @@ const commonModules = [
     test: /\.s(a|c)ss$/,
     exclude: /\.module.(s(a|c)ss)$/,
     loader: `style!css`
+  },
+  {
+    test: /\.(js|jsx)$/,
+    use: "babel-loader"
   }
 ];
 
@@ -123,12 +107,12 @@ const serverConfig = {
   },
   devtool: "inline-source-map" /* Extract ts source maps from tsconfig. */,
   entry: {
-    "index.ts": path.resolve(__dirname, "server/index.ts")
+    index: path.resolve(__dirname, "server/index.ts")
   },
   output: {
     path: path.resolve(process.cwd(), "build/js"),
-    filename: "[name].[chunk].bundle.js",
-    chunkFilename: "[id].[chunkhash:4].bundle.js",
+    filename: "[name].bundle.js",
+    chunkFilename: "[id].[chunkhash].bundle.js",
     libraryTarget: "umd"
   },
   resolve: {
@@ -168,12 +152,12 @@ const clientConfig = {
     errorDetails: true
   },
   entry: {
-    "index.tsx": path.resolve(__dirname, "client/index.tsx")
+    index: path.resolve(__dirname, "client/index.tsx")
   },
   output: {
     path: path.resolve(process.cwd(), "build"),
-    filename: "[name].[chunk:4].bundle.js",
-    chunkFilename: "[id].[chunkhash:4].bundle.js",
+    filename: "[name].bundle.js",
+    chunkFilename: "[id].bundle.js",
     libraryTarget: "umd"
   },
   performance: {
@@ -190,27 +174,15 @@ const clientConfig = {
   optimization: {
     runtimeChunk: "single",
     splitChunks: {
-      chunks: "all",
-      maxInitialRequests: Infinity,
-      minSize: 0,
-      cacheGroups: {
-        vendor: {
-          test: /[\\/]node_modules[\\/]/,
-          name(module) {
-            // get the name. E.g. node_modules/packageName/not/this/part.js
-            // or node_modules/packageName
-            const packageName = module.context.match(
-              /[\\/]node_modules[\\/](.*?)([\\/]|$)/
-            )[1];
-            // npm package names are URL-safe, but some servers don't like @ symbols
-            return `npm.${packageName.replace("@", "")}`;
-          },
-          enforce: true,
-          reuseExistingChunk: true
-        }
-      }
+      chunks: "all"
     }
-  }
+  },
+  externals: [
+    nodeExternals({
+      react: "React",
+      "react-dom": "ReactDom"
+    })
+  ]
 };
 
 module.exports = [serverConfig, clientConfig];
