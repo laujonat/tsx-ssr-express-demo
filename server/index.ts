@@ -4,7 +4,7 @@ import path from "path";
 import fs from "fs";
 import App from "../client/app";
 import { renderToString } from "react-dom/server";
-import html from "./html"
+import html from "./html";
 
 const port: number = 8000;
 const server: express.Application = express();
@@ -22,10 +22,11 @@ server.get("/", (req, res) => {
     if (err) {
       console.error("Oops!", err);
       throw err;
-    }   
+    }
+
     const staticHtml = html({ body, initData });
     return res.send(
-      staticHtml  
+      staticHtml
     );
   });
 });

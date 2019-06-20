@@ -7,7 +7,8 @@ export default ({ body, initData }: { body: string, initData: Object }) => `
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script>window.INITIAL_DATA = ${JSON.stringify({ initData })}</script>
   </head>
-    <div id="ssr">${body}</div>
-    <script src="/static/index.bundle.js"></script>
-   </html>
+    <body style="margin:0">
+      <div id="ssr">${body}</div>
+    </body>
+  </html>
 `;

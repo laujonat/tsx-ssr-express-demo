@@ -1,7 +1,8 @@
 const webpack = require("webpack");
 const path = require("path");
 const nodeExternals = require("webpack-node-externals");
-const BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
+const BundleAnalyzerPlugin = require("webpack-bundle-analyzer")
+  .BundleAnalyzerPlugin;
 
 // Code minification
 // const TerserPlugin = require("terser-webpack-plugin");
@@ -11,8 +12,9 @@ const ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin");
 const TsconfigPathsPlugin = require("tsconfig-paths-webpack-plugin");
 // https://github.com/Roilan/react-server-boilerplate/blob/master/webpack.config.js
 const isProduction = process.env.NODE_ENV === "production";
-// Define custom loading logic without suffering the performance penalty that script-based resource loaders incur. 
-// const PreloadWebpackPlugin = require('preload-webpack-plugin');
+const minify = require("html-minifier").minify;
+// Define custom loading logic without suffering the performance penalty that script-based resource loaders incur.
+const PreloadWebpackPlugin = require("preload-webpack-plugin");
 // Generate static HTML file on build
 // const HtmlWebpackPlugin = require("html-webpack-plugin");
 
@@ -23,13 +25,30 @@ const config = {
 
 const commonPlugins = [
   new BundleAnalyzerPlugin({
-    analyzerMode: 'disabled',
+    analyzerMode: "disabled",
     generateStatsFile: true,
     statsOptions: { source: false }
   }),
   new webpack.HotModuleReplacementPlugin(),
   new webpack.NoEmitOnErrorsPlugin(),
-  new ForkTsCheckerWebpackPlugin()
+  new ForkTsCheckerWebpackPlugin(),
+  new webpack.HashedModuleIdsPlugin(),
+  new HtmlWebpackPlugin({
+    meta: {
+      viewport: "width=device-width, initial-scale=1.0",
+      "Content-Security-Policy": {
+        "http-equiv": "Content-Security-Policy",
+        content: ""
+      }
+    },
+    minify: {
+      collapseWhitespace: true,
+      collapseWhitespace: true,
+      removeComments: true,
+      removeStyleLinkTypeAttributes: true,
+      useShortDoctype: true
+    }
+  })
 ];
 
 const tsPaths = [
@@ -65,7 +84,7 @@ const commonModules = [
   {
     test: /\.(js|jsx)$/,
     exclude: /node_modules/,
-    loader: 'babel-loader'
+    loader: "babel-loader"
   },
   {
     test: /\.s(a|c)ss$/,
@@ -116,8 +135,8 @@ const serverConfig = {
   },
   output: {
     path: path.resolve(process.cwd(), "build/js"),
-    filename: "[name].bundle.js",
-    chunkFilename: "[id].[chunkhash].bundle.js",
+    filename: "[name].[chunk].bundle.js",
+    chunkFilename: "[id].[contenthash].bundle.js",
     libraryTarget: "umd"
   },
   resolve: {
@@ -161,8 +180,8 @@ const clientConfig = {
   },
   output: {
     path: path.resolve(process.cwd(), "build"),
-    filename: "[name].bundle.js",
-    chunkFilename: "[id].bundle.js",
+    filename: "[name].[chunk].bundle.js",
+    chunkFilename: "[id].[contenthash].bundle.js",
     libraryTarget: "umd"
   },
   performance: {
@@ -179,7 +198,21 @@ const clientConfig = {
   optimization: {
     runtimeChunk: "single",
     splitChunks: {
-      chunks: "all"
+      chunks: "all",
+      minSize: 30000,
+      maxSize: 0,
+      minChunks: 1,
+      maxAsyncRequests: 5,
+      maxInitialRequests: 3,
+      automaticNameDelimiter: "~",
+      name: true,
+      cacheGroups: {
+        commons: {
+          test: /[\\/]node_modules[\\/]/,
+          name: "vendor",
+          chunks: "initial"
+        }
+      }
     }
   },
   externals: [
