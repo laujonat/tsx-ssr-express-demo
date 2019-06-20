@@ -1,8 +1,7 @@
 import React from "react";
 import ReactDOM from 'react-dom'
-import { HelloWorld } from "./components/HelloWorld";
-
 import { WindowInitData } from './types/index';
+import App from "./app";
 
 /**
  * We assume the initial render has taken place from the SSR.
@@ -12,7 +11,7 @@ import { WindowInitData } from './types/index';
  * */
 ((data) => {
     ReactDOM.hydrate(
-    <HelloWorld data={data} />,
+    <App data={data} />,
     document.getElementById("ssr")
     );
 })((window as WindowInitData).data)
