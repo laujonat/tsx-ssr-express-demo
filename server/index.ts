@@ -1,7 +1,7 @@
 import React from "react";
 import express from "express";
 import path from "path";
-import fs, { stat } from "fs";
+import fs from "fs";
 import App from "../client/app";
 import { renderToString } from "react-dom/server";
 import html from "./html"
