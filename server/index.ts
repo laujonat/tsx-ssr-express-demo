@@ -4,6 +4,7 @@ import path from "path";
 import fs from "fs";
 import { HelloWorld } from "../client/components/HelloWorld";
 import { renderToString } from "react-dom/server";
+import html from "./html";
 
 const port: number = 8000;
 const server: express.Application = express();
@@ -22,10 +23,10 @@ server.get("/", (req, res) => {
       console.error("Oops!", err);
       throw err;
     }
-    data.replace('<div id="ssr"></div>', `<div id=\"ssr\">${body}</div>`);
-    data.replace('window.INITIAL_DATA', `window.INITIAL_DATA = ${JSON.stringify({ initData })}`);
+
+    const staticHtml = html({ body, initData });
     return res.send(
-      data
+      staticHtml
     );
   });
 });

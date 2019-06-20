@@ -1,7 +1,8 @@
 const webpack = require("webpack");
 const path = require("path");
 const nodeExternals = require("webpack-node-externals");
-const BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
+const BundleAnalyzerPlugin = require("webpack-bundle-analyzer")
+  .BundleAnalyzerPlugin;
 
 // Code minification
 const TerserPlugin = require("terser-webpack-plugin");
@@ -12,8 +13,8 @@ const TsconfigPathsPlugin = require("tsconfig-paths-webpack-plugin");
 // https://github.com/Roilan/react-server-boilerplate/blob/master/webpack.config.js
 const isProduction = process.env.NODE_ENV === "production";
 const minify = require("html-minifier").minify;
-// Define custom loading logic without suffering the performance penalty that script-based resource loaders incur. 
-const PreloadWebpackPlugin = require('preload-webpack-plugin');
+// Define custom loading logic without suffering the performance penalty that script-based resource loaders incur.
+const PreloadWebpackPlugin = require("preload-webpack-plugin");
 // Generate static HTML file on build
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 
@@ -24,7 +25,7 @@ const config = {
 
 const commonPlugins = [
   new BundleAnalyzerPlugin({
-    analyzerMode: 'disabled',
+    analyzerMode: "disabled",
     generateStatsFile: true,
     statsOptions: { source: false }
   }),
@@ -33,21 +34,19 @@ const commonPlugins = [
   new ForkTsCheckerWebpackPlugin(),
   new webpack.HashedModuleIdsPlugin(),
   new HtmlWebpackPlugin({
-    hash: true,
     meta: {
       viewport: "width=device-width, initial-scale=1.0",
       "Content-Security-Policy": {
         "http-equiv": "Content-Security-Policy",
         content: ""
-      },
-      template: "./server.html.ts",
-      minify: {
-        collapseWhitespace: true,
-        collapseWhitespace: true,
-        removeComments: true,
-        removeStyleLinkTypeAttributes: true,
-        useShortDoctype: true
       }
+    },
+    minify: {
+      collapseWhitespace: true,
+      collapseWhitespace: true,
+      removeComments: true,
+      removeStyleLinkTypeAttributes: true,
+      useShortDoctype: true
     }
   })
 ];
@@ -85,7 +84,7 @@ const commonModules = [
   {
     test: /\.(js|jsx)$/,
     exclude: /node_modules/,
-    loader: 'babel-loader'
+    loader: "babel-loader"
   },
   {
     test: /\.s(a|c)ss$/,
@@ -128,12 +127,12 @@ const serverConfig = {
   },
   devtool: "inline-source-map" /* Extract ts source maps from tsconfig. */,
   entry: {
-    "index.ts": path.resolve(__dirname, "server/index.ts")
+    index: path.resolve(__dirname, "server/index.ts")
   },
   output: {
     path: path.resolve(process.cwd(), "build/js"),
     filename: "[name].[chunk].bundle.js",
-    chunkFilename: "[id].[chunkhash:4].bundle.js",
+    chunkFilename: "[id].[contenthash].bundle.js",
     libraryTarget: "umd"
   },
   resolve: {
@@ -173,12 +172,12 @@ const clientConfig = {
     errorDetails: true
   },
   entry: {
-    "index.tsx": path.resolve(__dirname, "client/index.tsx")
+    index: path.resolve(__dirname, "client/index.tsx")
   },
   output: {
     path: path.resolve(process.cwd(), "build"),
-    filename: "[name].[chunk:4].bundle.js",
-    chunkFilename: "[id].[chunkhash:4].bundle.js",
+    filename: "[name].[chunk].bundle.js",
+    chunkFilename: "[id].[contenthash].bundle.js",
     libraryTarget: "umd"
   },
   performance: {
@@ -205,9 +204,9 @@ const clientConfig = {
       name: true,
       cacheGroups: {
         commons: {
-          test: /[\\/]node_modules[\\/]/, 
+          test: /[\\/]node_modules[\\/]/,
           name: "vendor",
-          chunks: "initial",
+          chunks: "initial"
         }
       }
     }
@@ -217,7 +216,7 @@ const clientConfig = {
       react: "React",
       "react-dom": "ReactDom"
     })
-  ],
+  ]
 };
 
 module.exports = [serverConfig, clientConfig];
