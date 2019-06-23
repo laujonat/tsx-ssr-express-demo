@@ -5,18 +5,11 @@ const BundleAnalyzerPlugin = require("webpack-bundle-analyzer")
   .BundleAnalyzerPlugin;
 
 // Code minification
-// const TerserPlugin = require("terser-webpack-plugin");
-// Webpack plugin that runs TypeScript type checker on a separate process.
 const ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin");
 // Load modules contained in "paths" in tsconfig.json
 const TsconfigPathsPlugin = require("tsconfig-paths-webpack-plugin");
 // https://github.com/Roilan/react-server-boilerplate/blob/master/webpack.config.js
 const isProduction = process.env.NODE_ENV === "production";
-const minify = require("html-minifier").minify;
-// Define custom loading logic without suffering the performance penalty that script-based resource loaders incur.
-const PreloadWebpackPlugin = require("preload-webpack-plugin");
-// Generate static HTML file on build
-const HtmlWebpackPlugin = require("html-webpack-plugin");
 
 const env = process.env.NODE_ENV;
 const config = {
@@ -31,7 +24,7 @@ const commonPlugins = [
   }),
   new webpack.HotModuleReplacementPlugin(),
   new webpack.NoEmitOnErrorsPlugin(),
-  new ForkTsCheckerWebpackPlugin()
+  new ForkTsCheckerWebpackPlugin(),
 ];
 
 const tsPaths = [
@@ -145,7 +138,8 @@ const clientConfig = {
   target: "web",
   node: {
     global: true,
-    fs: "empty"
+    fs: "empty",
+    net: "empty" // production
   },
   stats: {
     colors: true,
@@ -183,13 +177,14 @@ const clientConfig = {
           // code shared between chunks
           test: /node_modules/,
           name: "common",
-          chunks: "initial"
+          chunks: "all"
         },
         vendor: {
             // sync + async chunks coming from /node_modules/
             test: /node_modules/,
             name: "vendor",
-            chunks: "all"
+            chunks: "all",
+            reuseExistingChunk: true
           }
         },
       }
@@ -197,18 +192,3 @@ const clientConfig = {
 };
 
 module.exports = [serverConfig, clientConfig];
-
-// minSize: 30000,
-//   maxSize: 0,
-//     minChunks: 1,
-//       maxAsyncRequests: 5,
-//         maxInitialRequests: 3,
-//           automaticNameDelimiter: "~",
-//             name: true,
-//               cacheGroups: {
-//   commons: {
-//     test: /[\\/]node_modules[\\/]/,
-//       name: "vendor",
-//         chunks: "initial"
-//   }
-// }

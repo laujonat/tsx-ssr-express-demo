@@ -1,4 +1,4 @@
-import React from "react"
+import React from "react";
 import express from "express";
 import path from "path";
 import fs from "fs";
@@ -19,15 +19,13 @@ const server: express.Application = express();
 server.use("/static", express.static(path.resolve(process.cwd(), "build/client")));
 
 server.get("/", (req, res) => {
-  console.log(path.resolve(__dirname, "../"));
-  const sheet = new ServerStyleSheet(); 
+  const sheet = new ServerStyleSheet();
 
   const app: string = renderToString(sheet.collectStyles(React.createElement(App)));
 
   const styles = sheet.getStyleTags();
 
   const indexFile: string = path.resolve("src/assets", "index.html");
-  console.log(indexFile);
 
   fs.readFile(indexFile, "utf8", (err, data) => {
     if (err) {
