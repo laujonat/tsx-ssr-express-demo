@@ -15,7 +15,8 @@
   "watch": [ 
     "build/", 
     "src/server/",
-    "src/"
+    "src/",
+    "./webpack.config.js"
   ],
   "env": {
     "NODE_ENV": "development"

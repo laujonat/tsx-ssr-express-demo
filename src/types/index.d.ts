@@ -20,12 +20,11 @@ declare module "styled-components" {
         getStyleTags(): string;
         getStyleElement(): ReactElement<any>;
         static create(): StyleSheet;
+        createGlobalStyle(
+            strings: TemplateStringsArray,
+            ...interpolations: SimpleInterpolation[]
+        ): React.ComponentClass;
     }
-
-    export function createGlobalStyle(
-        strings: TemplateStringsArray,
-        ...interpolations: SimpleInterpolation[]
-    ): React.ComponentClass;
 }
 
 export interface WindowInitData extends Window {

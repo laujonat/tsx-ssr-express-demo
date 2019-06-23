@@ -31,24 +31,7 @@ const commonPlugins = [
   }),
   new webpack.HotModuleReplacementPlugin(),
   new webpack.NoEmitOnErrorsPlugin(),
-  new ForkTsCheckerWebpackPlugin(),
-  new webpack.HashedModuleIdsPlugin(),
-  new HtmlWebpackPlugin({
-    meta: {
-      viewport: "width=device-width, initial-scale=1.0",
-      "Content-Security-Policy": {
-        "http-equiv": "Content-Security-Policy",
-        content: ""
-      }
-    },
-    minify: {
-      collapseWhitespace: true,
-      collapseWhitespace: true,
-      removeComments: true,
-      removeStyleLinkTypeAttributes: true,
-      useShortDoctype: true
-    }
-  })
+  new ForkTsCheckerWebpackPlugin()
 ];
 
 const tsPaths = [
@@ -66,7 +49,8 @@ const productionPlugins = isProduction
     ]
   : [
       new webpack.DefinePlugin({
-        "process.env": { NODE_ENV: JSON.stringify("development") }
+        "process.env": { NODE_ENV: JSON.stringify("development") },
+        'global': {}, // bizarre lodash(?) webpack workaround
       })
     ];
 
@@ -75,7 +59,7 @@ const clientPlugins = isProduction
   : [];
 
 /* Modules  */
-const commonModules = [
+const js = [
   {
     test: /\.json$/,
     type: "javascript/auto",
@@ -83,31 +67,21 @@ const commonModules = [
   },
   {
     test: /\.(js|jsx)$/,
-    exclude: /node_modules/,
-    loader: "babel-loader"
+    exclude: [/node_modules/],
+    use: {
+      loader: "babel-loader",
+      options: {
+        presets: ["react", "env"],
+        plugins: ["transform-class-properties"]
+      }
+    }
   },
   {
     test: /\.s(a|c)ss$/,
     exclude: /\.module.(s(a|c)ss)$/,
     loader: `style!css`
-  },
-  {
-    test: /\.(js|jsx)$/,
-    use: "babel-loader"
   }
 ];
-
-const js = {
-  test: /\.js$/,
-  exclude: [/node_modules/],
-  use: {
-    loader: "babel-loader",
-    options: {
-      presets: ["react", "env"],
-      plugins: ["transform-class-properties"]
-    }
-  }
-};
 
 const ts = {
   test: /\.(ts|tsx)?$/,
@@ -118,42 +92,46 @@ const ts = {
   }
 };
 
-const mergedModules = commonModules.concat(js, ts);
+const mergedModules = js.concat(ts);
 
 const serverConfig = {
   mode: config.mode,
   node: {
+    global: true,
     fs: "empty"
   },
+  target: "node",
   stats: {
     colors: true,
     errorDetails: true
   },
   devtool: "inline-source-map" /* Extract ts source maps from tsconfig. */,
   entry: {
-    index: path.resolve(__dirname, "src/server/index.ts")
+    _sv: path.resolve(__dirname, "src/server/index.ts")
   },
   output: {
-    path: path.resolve(process.cwd(), "build/js"),
+    path: path.resolve(__dirname, "build"),
     filename: "[name].[chunk].bundle.js",
-    chunkFilename: "[id].[contenthash].bundle.js",
+    chunkFilename: "[id].[chunk].bundle.js",
     libraryTarget: "umd"
   },
   resolve: {
     plugins: tsPaths,
     extensions: [".js", ".jsx", ".ts", ".tsx", ".json"]
   },
-  target: "node",
   module: {
     rules: mergedModules
   },
   performance: {
     hints: "warning"
-    // assetFilter: function (assetFilename) {
-    //   return assetFilename.endsWith(".js");
-    // }
   },
   plugins: productionPlugins.concat(commonPlugins),
+  optimization: {
+    runtimeChunk: "single",
+    splitChunks: {
+      chunks: "all"
+    }
+  },
   externals: [
     nodeExternals({
       react: "React",
@@ -166,22 +144,20 @@ const clientConfig = {
   mode: config.mode,
   target: "web",
   node: {
-    fs: "empty",
-    net: "empty",
-    tls: "empty",
-    dns: "empty"
+    global: true,
+    fs: "empty"
   },
   stats: {
     colors: true,
     errorDetails: true
   },
   entry: {
-    index: path.resolve(__dirname, "src/index.tsx")
+    _c: path.resolve(__dirname, "src/index.tsx")
   },
   output: {
-    path: path.resolve(process.cwd(), "build"),
+    path: path.resolve(__dirname, "build/client"),
     filename: "[name].[chunk].bundle.js",
-    chunkFilename: "[id].[contenthash].bundle.js",
+    chunkFilename: "[id].[chunk].bundle.js",
     libraryTarget: "umd"
   },
   performance: {
@@ -199,28 +175,40 @@ const clientConfig = {
     runtimeChunk: "single",
     splitChunks: {
       chunks: "all",
-      minSize: 30000,
-      maxSize: 0,
-      minChunks: 1,
       maxAsyncRequests: 5,
       maxInitialRequests: 3,
-      automaticNameDelimiter: "~",
       name: true,
       cacheGroups: {
         commons: {
-          test: /[\\/]node_modules[\\/]/,
-          name: "vendor",
+          // code shared between chunks
+          test: /node_modules/,
+          name: "common",
           chunks: "initial"
-        }
+        },
+        vendor: {
+            // sync + async chunks coming from /node_modules/
+            test: /node_modules/,
+            name: "vendor",
+            chunks: "all"
+          }
+        },
       }
-    }
-  },
-  externals: [
-    nodeExternals({
-      react: "React",
-      "react-dom": "ReactDom"
-    })
-  ]
+  }
 };
 
 module.exports = [serverConfig, clientConfig];
+
+// minSize: 30000,
+//   maxSize: 0,
+//     minChunks: 1,
+//       maxAsyncRequests: 5,
+//         maxInitialRequests: 3,
+//           automaticNameDelimiter: "~",
+//             name: true,
+//               cacheGroups: {
+//   commons: {
+//     test: /[\\/]node_modules[\\/]/,
+//       name: "vendor",
+//         chunks: "initial"
+//   }
+// }

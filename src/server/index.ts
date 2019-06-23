@@ -16,15 +16,18 @@ const initData: Object = {
 const port: number = 8000;
 const server: express.Application = express();
 
-server.use("/static", express.static(path.resolve(__dirname, "../build")));
+server.use("/static", express.static(path.resolve(process.cwd(), "build/client")));
+
 server.get("/", (req, res) => {
+  console.log(path.resolve(__dirname, "../"));
   const sheet = new ServerStyleSheet(); 
 
   const app: string = renderToString(sheet.collectStyles(React.createElement(App)));
 
   const styles = sheet.getStyleTags();
 
-  const indexFile: string = path.resolve("./dist/index.html");
+  const indexFile: string = path.resolve("src/assets", "index.html");
+  console.log(indexFile);
 
   fs.readFile(indexFile, "utf8", (err, data) => {
     if (err) {
