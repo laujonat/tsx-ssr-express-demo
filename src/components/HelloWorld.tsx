@@ -1,6 +1,8 @@
 import React from "react";
-import { IHelloWorldProps } from "../types/index";
-import styled from "styled-components";
+import { IHelloWorldProps } from "../types";
+import styled from "../theme";
+import * as R from "react95";
+
 
 const AppContainer = styled.div`
   display: flex;
@@ -14,5 +16,12 @@ const AppContainer = styled.div`
 `;
 
 export const HelloWorld: React.FC<IHelloWorldProps<Object>> = ({ data }) => {
-  return <AppContainer>Server Rendered! {data}</AppContainer>;
+  return (
+  <AppContainer>
+        <R.List>
+          <R.ListItem>🎤 Sing</R.ListItem>
+      </R.List>  
+    Server Rendered! {data}
+  </AppContainer>
+  )
 };

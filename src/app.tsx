@@ -1,16 +1,24 @@
-import React from "react";
+import React, { Fragment, SFC } from "react";
 import { HelloWorld } from './components/HelloWorld';
-import { createGlobalStyle } from "./theme";
 import reset from "styled-reset";
+import { createGlobalStyle, ThemeProvider, theme } from "./theme/";
 
 const GlobalStyle = createGlobalStyle`
   ${reset}
 `
+type AppProps = Required<{
+  data: Object;
+}>;
 
-interface App {}
-
-function App({ data }: { data: Object }) {
-  return <HelloWorld data={data}/>;
+const App: SFC<AppProps> = ({ data }) => {
+  return (
+    <Fragment>
+      <GlobalStyle />
+      <ThemeProvider theme={theme}>
+        <HelloWorld data={data} />
+      </ThemeProvider>
+    </Fragment>
+  )
 }
 
 

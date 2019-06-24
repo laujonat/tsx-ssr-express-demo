@@ -1,5 +1,4 @@
-import * as styledComponents from "styled-components";
-import { ThemedStyledComponentsModule } from "styled-components";
+import * as _ from "styled-components";
 
 const {
     default: styled,
@@ -8,12 +7,13 @@ const {
     createGlobalStyle,
     ThemeProvider,
     ServerStyleSheet
-} = styledComponents as styledComponents.ThemedStyledComponentsModule<
+} = _ as _.ThemedStyledComponentsModule<
     IThemeInterface
 >;
 
 export interface IThemeInterface {
     primaryColor: string;
+    default?: any;
 }
 
 export const theme = {

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { ReactElement } from "react";
 import { ThemedStyledComponentsModule } from "styled-components";
 
 declare namespace JSX {
@@ -15,11 +15,10 @@ declare module "styled-components" {
         ): React.ComponentClass;
     }
 
-    export interface ServerStyleSheet<T> {
+    export interface ServerStyleSheet {
         collectStyles(children: ReactElement<any>): ReactElement<any>;
         getStyleTags(): string;
         getStyleElement(): ReactElement<any>;
-        static create(): StyleSheet;
         createGlobalStyle(
             strings: TemplateStringsArray,
             ...interpolations: SimpleInterpolation[]
