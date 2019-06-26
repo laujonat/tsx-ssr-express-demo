@@ -1,25 +1,27 @@
 import React, { Fragment, SFC } from "react";
-import { HelloWorld } from './components/HelloWorld';
+import { Desktop } from "./components/Desktop";
 import reset from "styled-reset";
-import { createGlobalStyle, ThemeProvider, theme } from "./theme/";
+import { createGlobalStyle, ThemeProvider } from "./theme";
+import { themes } from "react95";
 
 const GlobalStyle = createGlobalStyle`
   ${reset}
-`
-type AppProps = Required<{
+`;
+
+type AppProps = {
   data: Object;
-}>;
+};
 
 const App: SFC<AppProps> = ({ data }) => {
   return (
     <Fragment>
       <GlobalStyle />
-      <ThemeProvider theme={theme}>
-        <HelloWorld data={data} />
+      <ThemeProvider theme={themes.default}>
+        <Desktop data={data} />
       </ThemeProvider>
     </Fragment>
-  )
-}
+  );
+};
 
 
 export default App;

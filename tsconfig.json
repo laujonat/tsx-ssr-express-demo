@@ -24,6 +24,9 @@
     "exclude": [ 
       "node_modules"
     ],
+    "plugins": {
+        "name": "tslint-language-service"
+    },
     "paths": {
         "@types": ["types", "./src/types/*"],
         "@react95": ["react95", "./src/react95/*"],
@@ -33,6 +36,7 @@
         ]
     },
     "types": [
+        "csstype",
         "express",
         "node",
         "react",

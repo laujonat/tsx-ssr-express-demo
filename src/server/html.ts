@@ -1,13 +1,13 @@
-function html({ app, initData, styles }: { app: string, initData: Object, styles: string }) {
+function html({ app, data, styles }: { app: string, data: Object, styles: string }) {
   return (
   `
     <!DOCTYPE html>
     <html>
     <head>
+    <link rel='ficon' type='image/x-icon' href='static/favicon.ico' />
     <meta charset="utf-8" />
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=contain">
-    <script>window.INITIAL_DATA = ${JSON.stringify({ initData })}</script>
+    <script>window.INITIAL_DATA = ${JSON.stringify({ data })}</script>
     ${styles}
     </head>
       <body>

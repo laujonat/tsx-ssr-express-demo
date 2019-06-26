@@ -1,4 +1,6 @@
 import * as _ from "styled-components";
+import { ThemedStyledInterface } from "styled-components";
+import { themes } from "react95";
 
 const {
     default: styled,
@@ -7,18 +9,13 @@ const {
     createGlobalStyle,
     ThemeProvider,
     ServerStyleSheet
-} = _ as _.ThemedStyledComponentsModule<
-    IThemeInterface
->;
+} = _ as _.ThemedStyledComponentsModule<IThemeInterface>;
 
 export interface IThemeInterface {
-    primaryColor: string;
-    default?: any;
+    theme?: Object;
 }
 
-export const theme = {
-    primaryColor: "#e9e9eb"
-};
+export type Theme = typeof themes.default;
 
 export { css, createGlobalStyle, keyframes, ThemeProvider, ServerStyleSheet };
-export default styled;
+export default styled as ThemedStyledInterface<Theme>;

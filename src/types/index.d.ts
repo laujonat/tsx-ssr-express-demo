@@ -1,6 +1,22 @@
 import React, { ReactElement } from "react";
 import { ThemedStyledComponentsModule } from "styled-components";
 
+declare global {
+    namespace NodeJS {
+        // tslint:disable-next-line:no-empty-interface
+        interface ReadableStream { }
+    }
+    interface WindowInterface extends Window {
+        INITIAL_DATA: window.INITIAL_DATA;
+    }
+}
+
+
+
+export interface IDesktopProps {
+    data: Object;
+}
+
 declare namespace JSX {
     interface IntrinsicElements {
         div: React.HTMLAttributes<HTMLElement>;
@@ -24,15 +40,4 @@ declare module "styled-components" {
             ...interpolations: SimpleInterpolation[]
         ): React.ComponentClass;
     }
-}
-
-export interface WindowInitData extends Window {
-    data: {
-        INITIAL_DATA: any;
-    };
-}
-
-
-export interface IHelloWorldProps<Object> {
-    data: Object;
 }
