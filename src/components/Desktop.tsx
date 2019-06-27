@@ -3,6 +3,7 @@ import { IDesktopProps } from "../types";
 import styled, { ThemeProvider } from "../theme";
 import { TaskBar } from "./TaskBar";
 import { themes } from "react95";
+import { WindowContainer } from "./WindowContainer";
 
 
 const AppContainer = styled.div`
@@ -17,12 +18,13 @@ const AppContainer = styled.div`
 
 export const Desktop: React.FC<IDesktopProps> = ({ data }) => {
   const stringed = data ? data : undefined;
+  const prop = stringed;
   return (
   <AppContainer>
       <ThemeProvider theme={themes.default}>
       <React.Fragment>
         <TaskBar />
-          {stringed}
+          <WindowContainer greeting={`${prop}`} />
         </React.Fragment>
     </ThemeProvider>
   </AppContainer>

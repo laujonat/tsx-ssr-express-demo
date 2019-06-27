@@ -8,7 +8,10 @@ declare module "react95" {
     export import TextField = React95.TextField;
     export import Button = React95.Button;
     export import Divider = React95.Divider;
-    export import LogoIcon = React95.LogoIcon;
+    export import Window = React95.Window;
+    export import WindowContent = React95.WindowContent;
+    export import Fieldset = React95.Fieldset;
+
     export import themes = themes;
 }
 
@@ -44,6 +47,34 @@ declare namespace React95 {
         children?: undefined;
     }
 
+    interface IWindowInterface {
+        children: JSX.Element[];
+        style?: React.CSSProperties;
+    }
+
+    interface IWindowContentInterface {
+        children: JSX.Element[] | JSX.Element;
+        style?: React.CSSProperties;
+    }
+
+    interface IFieldSetInterface {
+        children: JSX.Element[] | JSX.Element | string;
+        style?: React.CSSProperties;
+    }
+
+    interface WindowPropTypes extends IWindowInterface  {
+        children: JSX.Element[] | JSX.Element;
+    }
+
+    interface WindowContentPropTypes extends IWindowContentInterface {
+        children: JSX.Element;
+    }
+
+    interface FieldsetPropTypes extends IFieldSetInterface {
+        children: string;
+    }
+
+
     interface IListInterface {
         children?: JSX.Element[] | JSX.Element;
         style?: React.CSSProperties;
@@ -62,13 +93,12 @@ declare namespace React95 {
     export function TextField(T: TextFieldPropTypes): JSX.Element { }
     export function Button(T: ButtonPropTypes): JSX.Element { }
     export function Divider(T: DividerPropTypes): JSX.Element { }
+    export function Window(T: WindowPropTypes): JSX.Element { }
+    export function WindowContent(T: WindowContentPropTypes): JSX.Element { }
+    export function Fieldset(T: FieldsetPropTypes): JSX.Element { }
 
-    export class AppBar extends React.Component<AppBarPropTypes> {
-
-    }
-    export class Toolbar extends React.Component<ToolbarPropTypes> {
-
-    }
+    export class AppBar extends React.Component<AppBarPropTypes> { }
+    export class Toolbar extends React.Component<ToolbarPropTypes> { }
 
     export const themes: Object;
 }

@@ -1,5 +1,5 @@
 import React from "react";
-import { AppBar, Toolbar, TextField, List, ListItem, Divider, LogoIcon, Button } from "react95";
+import { AppBar, Toolbar, TextField, List, ListItem, Divider, Button } from "react95";
 
 export interface ITaskBar {
 }

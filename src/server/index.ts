@@ -9,7 +9,7 @@ import { ServerStyleSheet } from "styled-components";
 import console = require("console");
 
 enum Initials {
-    data = "Eggplant"
+    data = "🐵🙈🙉🙊🐒"
 }
 const initi: keyof typeof Initials = "data";
 const initData: string = Initials[initi];
