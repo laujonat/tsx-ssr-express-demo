@@ -9,7 +9,7 @@
     "@types/styled-components": "^4.1.16",
     "express": "^4.17.1",
     "jest-styled-components": "^6.3.3",
-    "lodash": "^4.17.11",
+    "lodash": "^4.17.21",
     "react": "^16.8.6",
     "styled-reset": "^2.0.16",
     "tslint-language-service": "^0.9.9"
